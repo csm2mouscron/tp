@@ -105,27 +105,45 @@ let index = 0;
 let isFlipped = false;
 
 const cardElement = document.getElementById('card');
+const modeSelect = document.getElementById('modeSelect');
 
 function render() {
     if (currentList.length === 0) {
         document.getElementById('frontTitle').innerText = "Aucun verbe";
         document.getElementById('frontSub').innerText = "";
+        document.getElementById('detailsContainer').innerHTML = "";
         document.getElementById('counter').innerText = "0 / 0";
         return;
     }
 
     const v = currentList[index];
-    
-    // Front content
-    document.getElementById('frontTag').innerText = `Verbe N° ${v.num || (index + 1)} / 99`;
-    document.getElementById('frontTitle').innerText = v.inf;
-    document.getElementById('frontSub').innerText = v.tr;
+    const mode = modeSelect.value;
 
-    // Back content
-    document.getElementById('backInf').innerText = v.inf;
-    document.getElementById('backOvt').innerText = v.ovt;
-    document.getElementById('backVd').innerText = v.vd;
-    document.getElementById('backTr').innerText = v.tr;
+    // Définition des champs
+    const fields = {
+        inf: { label: "Infinitif", val: v.inf },
+        ovt: { label: "OVT (Imparfait)", val: v.ovt },
+        vd: { label: "VD (Participe passé)", val: v.vd },
+        tr: { label: "Traduction", val: v.tr }
+    };
+
+    // Face Avant : Affichage du mot sélectionné
+    document.getElementById('frontTag').innerText = `Verbe N° ${v.num || (index + 1)} / 99`;
+    document.getElementById('frontTitle').innerText = fields[mode].val;
+    document.getElementById('frontSub').innerText = fields[mode].label;
+
+    // Face Arrière : Génération dynamique des 3 autres mots
+    const container = document.getElementById('detailsContainer');
+    container.innerHTML = '';
+
+    Object.keys(fields).forEach(key => {
+        if (key !== mode) {
+            const row = document.createElement('div');
+            row.className = 'detail-row';
+            row.innerHTML = `<span>${fields[key].label} :</span> <strong>${fields[key].val}</strong>`;
+            container.appendChild(row);
+        }
+    });
 
     document.getElementById('counter').innerText = `Carte ${index + 1} / ${currentList.length}`;
 }
@@ -140,8 +158,13 @@ function resetFlip() {
     cardElement.classList.remove('flipped');
 }
 
-// Interractions
+// Événements
 document.getElementById('cardContainer').onclick = flipCard;
+
+modeSelect.onchange = () => {
+    resetFlip();
+    render();
+};
 
 document.getElementById('nextBtn').onclick = () => {
     if (!currentList.length) return;
@@ -177,9 +200,8 @@ document.getElementById('search').oninput = (e) => {
     render();
 };
 
-// Keyboards shortcuts
 document.onkeydown = (e) => {
-    if (e.target.tagName === 'INPUT') return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
     if (e.key === 'ArrowRight') document.getElementById('nextBtn').click();
     if (e.key === 'ArrowLeft') document.getElementById('prevBtn').click();
     if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown') { 
@@ -189,4 +211,3 @@ document.onkeydown = (e) => {
 };
 
 render();
-     
