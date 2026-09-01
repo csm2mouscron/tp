@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards Néerlandais</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Temps Primitifs Néerlandais</h2>
+
+    <div class="controls">
+        <input type="text" id="search" placeholder="Rechercher (ex: bakken, cuire)...">
+        <button id="shuffleBtn">🔀 Mélanger</button>
+    </div>
+
+    <div class="stats">
+        <span id="counter">Carte 1 / 99</span>
+    </div>
+
+    <!-- Carte avec animation 3D -->
+    <div class="card-container" id="cardContainer">
+        <div class="card" id="card">
+            <!-- Face Avant -->
+            <div class="card-face card-front">
+                <div class="card-tag" id="frontTag">Verbe N° 1</div>
+                <div>
+                    <div class="main-term" id="frontTitle">bakken</div>
+                    <div class="sub-term" id="frontSub">cuire</div>
+                </div>
+                <div class="hint">💡 Cliquez ou appuyez sur ESPACE pour retourner</div>
+            </div>
+
+            <!-- Face Arrière -->
+            <div class="card-face card-back">
+                <div class="card-tag">Réponse Complète</div>
+                <div class="details">
+                    <div class="detail-row"><span>Infinitif :</span> <strong id="backInf">bakken</strong></div>
+                    <div class="detail-row"><span>OVT :</span> <strong id="backOvt">bakte(n)</strong></div>
+                    <div class="detail-row"><span>VD :</span> <strong id="backVd">gebakken</strong></div>
+                    <div class="detail-row"><span>Traduction :</span> <strong id="backTr" class="accent-text">cuire</strong></div>
+                </div>
+                <div class="hint">⬅️ Utilisez les flèches du clavier ➡️</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav">
+        <button id="prevBtn">⬅️ Précédent</button>
+        <button id="nextBtn">Suivant ➡️</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+
