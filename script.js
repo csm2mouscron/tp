@@ -103,8 +103,10 @@ const verbs = [
 let currentList = [...verbs];
 let index = 0;
 let isFlipped = false;
+let isAnimating = false;
 
 const cardElement = document.getElementById('card');
+const cardContainer = document.getElementById('cardContainer');
 const modeSelect = document.getElementById('modeSelect');
 
 function render() {
@@ -146,6 +148,7 @@ function render() {
 }
 
 function flipCard() {
+    if (isAnimating) return;
     isFlipped = !isFlipped;
     cardElement.classList.toggle('flipped', isFlipped);
 }
@@ -155,26 +158,49 @@ function resetFlip() {
     cardElement.classList.remove('flipped');
 }
 
-document.getElementById('cardContainer').onclick = flipCard;
+// Fonction de changement de carte avec animation
+function changeCard(direction) {
+    if (!currentList.length || isAnimating) return;
+    isAnimating = true;
+
+    const outClass = direction === 'next' ? 'slide-out-next' : 'slide-out-prev';
+    const inClass = direction === 'next' ? 'slide-in-next' : 'slide-in-prev';
+
+    // 1. Départ de l'ancienne carte
+    cardContainer.classList.add(outClass);
+
+    setTimeout(() => {
+        resetFlip();
+        
+        // 2. Mise à jour de l'index
+        if (direction === 'next') {
+            index = (index + 1) % currentList.length;
+        } else {
+            index = (index - 1 + currentList.length) % currentList.length;
+        }
+        render();
+
+        // 3. Arrivée de la nouvelle carte
+        cardContainer.classList.remove(outClass);
+        cardContainer.classList.add(inClass);
+
+        setTimeout(() => {
+            cardContainer.classList.remove(inClass);
+            isAnimating = false;
+        }, 200);
+    }, 150);
+}
+
+// Événements
+cardContainer.onclick = flipCard;
 
 modeSelect.onchange = () => {
     resetFlip();
     render();
 };
 
-document.getElementById('nextBtn').onclick = () => {
-    if (!currentList.length) return;
-    resetFlip();
-    index = (index + 1) % currentList.length;
-    render();
-};
-
-document.getElementById('prevBtn').onclick = () => {
-    if (!currentList.length) return;
-    resetFlip();
-    index = (index - 1 + currentList.length) % currentList.length;
-    render();
-};
+document.getElementById('nextBtn').onclick = () => changeCard('next');
+document.getElementById('prevBtn').onclick = () => changeCard('prev');
 
 document.getElementById('shuffleBtn').onclick = () => {
     resetFlip();
@@ -198,8 +224,8 @@ document.getElementById('search').oninput = (e) => {
 
 document.onkeydown = (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
-    if (e.key === 'ArrowRight') document.getElementById('nextBtn').click();
-    if (e.key === 'ArrowLeft') document.getElementById('prevBtn').click();
+    if (e.key === 'ArrowRight') changeCard('next');
+    if (e.key === 'ArrowLeft') changeCard('prev');
     if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown') { 
         e.preventDefault(); 
         flipCard(); 
@@ -207,4 +233,4 @@ document.onkeydown = (e) => {
 };
 
 render();
-    
+        
