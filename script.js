@@ -119,7 +119,6 @@ function render() {
     const v = currentList[index];
     const mode = modeSelect.value;
 
-    // Définition des champs
     const fields = {
         inf: { label: "Infinitif", val: v.inf },
         ovt: { label: "OVT (Imparfait)", val: v.ovt },
@@ -127,12 +126,10 @@ function render() {
         tr: { label: "Traduction", val: v.tr }
     };
 
-    // Face Avant : Affichage du mot sélectionné
     document.getElementById('frontTag').innerText = `Verbe N° ${v.num || (index + 1)} / 99`;
     document.getElementById('frontTitle').innerText = fields[mode].val;
     document.getElementById('frontSub').innerText = fields[mode].label;
 
-    // Face Arrière : Génération dynamique des 3 autres mots
     const container = document.getElementById('detailsContainer');
     container.innerHTML = '';
 
@@ -158,7 +155,6 @@ function resetFlip() {
     cardElement.classList.remove('flipped');
 }
 
-// Événements
 document.getElementById('cardContainer').onclick = flipCard;
 
 modeSelect.onchange = () => {
@@ -211,3 +207,4 @@ document.onkeydown = (e) => {
 };
 
 render();
+    
